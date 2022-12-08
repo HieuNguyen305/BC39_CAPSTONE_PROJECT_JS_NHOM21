@@ -1,0 +1,20 @@
+#cart {
+  i {
+    font-size: 22px;
+    position: relative;
+    #counterCart {
+      position: absolute;
+      content: "";
+      background-color: $color-blue-2;
+      top: -50%;
+      right: -50%;
+      width: 20px;
+      height: 20px;
+      border-radius: 50vw;
+      font-size: 14px;
+      line-height: 20px;
+      color: #fff;
+      text-align: center;
+    }
+  }
+}
