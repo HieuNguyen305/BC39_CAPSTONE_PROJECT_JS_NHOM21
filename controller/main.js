@@ -40,14 +40,30 @@ const render = (products) => {
   });
 };
 
+const loadingTemplate = `
+  <div id="loading">
+  <div class="loading">
+	<div class="circle cyan"></div>
+	<div class="circle magenta"></div>
+	<div class="circle yellow"></div>
+</div>
+  </div>
+`;
+
 function showListProducts() {
+  document.body.insertAdjacentHTML("beforeend", loadingTemplate);
   productService
     .getListProductApi()
     .then((data) => {
       render(data.data);
       productList = data.data;
     })
-    .catch((error) => console.log(error));
+    .catch((error) => {
+      containerListProduct.innerHTML = `<div style="text-align: center;flex: 1; font-size: 32px"><p>${error.message}</p></div>`;
+    })
+    .finally(() => {
+      loading.remove();
+    });
 }
 
 showListProducts();
@@ -130,7 +146,6 @@ function renderCart(cartList) {
 }
 
 renderCart(cartListStored);
-
 function addToCart(id) {
   let productSelected = productList.find((product) => product.id === id);
   let cartItem = {
@@ -142,31 +157,26 @@ function addToCart(id) {
     },
     quantity: 1,
   };
-  console.log(checkDuplicateProduct(id));
-  cartListStored.push(cartItem);
-  saveToLocal(cartListStored);
-  renderCart(cartListStored);
+  if (checkDuplicateProduct(id)) {
+    saveToLocal(cartListStored);
+    renderCart(cartListStored);
+  } else {
+    cartListStored.push(cartItem);
+    saveToLocal(cartListStored);
+    renderCart(cartListStored);
+  }
 }
 
 function saveToLocal(products) {
   localStorage.setItem("cartList", JSON.stringify(products));
 }
-
-/*
- * chưa xong phần này nha
- **************************
- */
 function checkDuplicateProduct(id) {
-  let productDuplicate = cartListStored.filter((productInCart) => {
+  let productDuplicate = cartListStored.find((productInCart) => {
     return productInCart.product.id === String(id);
   });
-  // return productDuplicate.quantity++;
-  console.log(productDuplicate);
+  if (productDuplicate) productDuplicate.quantity++;
+  return !!productDuplicate;
 }
-
-/*
- **************************
- */
 
 function removeCart(id) {
   const indexOfProductRemoved = cartListStored.findIndex((cartProduct) => {
