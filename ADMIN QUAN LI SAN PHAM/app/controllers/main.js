@@ -135,7 +135,7 @@ function addProduct() {
     "(*) Vui lòng chọn đúng dòng sản phẩm"
   );
 
-  if (flag === true) {
+  if (flag) {
     producService
       .addProductApi(product)
       .then((rs) => {
