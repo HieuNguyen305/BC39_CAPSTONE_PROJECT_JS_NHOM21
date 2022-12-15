@@ -141,6 +141,8 @@ function addProduct() {
       .then((rs) => {
         alert("Add Complete !");
         getListProduct();
+        const allField = document.querySelectorAll(".form-group .form-control");
+        allField.forEach((input) => (input.value = ""));
         document.getElementsByClassName("close")[0].click();
       })
       .catch((error) => {
